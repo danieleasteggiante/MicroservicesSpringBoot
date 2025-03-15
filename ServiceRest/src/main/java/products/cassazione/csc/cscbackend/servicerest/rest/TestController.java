@@ -1,0 +1,52 @@
+package products.cassazione.csc.cscbackend.servicerest.rest;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import products.cassazione.csc.cscbackend.servicerest.feign.TestFeignClient;
+import products.cassazione.csc.cscbackend.servicerest.feign.TestFeignClientEurekaClient;
+import products.cassazione.csc.cscbackend.servicerest.feign.TestLoadBalancer;
+
+/**
+ * @author Daniele Asteggiante
+ */
+
+@RestController
+@RequestMapping("/api")
+public class TestController {
+
+    @Value("${message}")
+    private String message;
+
+    @Value("${spring.application.name}")
+    private String applicationName;
+
+    private final TestFeignClient testFeignClient;
+    private final TestFeignClientEurekaClient testFeignClientEurekaClient;
+    private final TestLoadBalancer testLoadBalancer;
+
+    public TestController(TestFeignClient testFeignClient,
+                          TestFeignClientEurekaClient testFeignClientEurekaClient,
+                          TestLoadBalancer testLoadBalancer) {
+        this.testFeignClient = testFeignClient;
+        this.testFeignClientEurekaClient = testFeignClientEurekaClient;
+        this.testLoadBalancer = testLoadBalancer;
+    }
+
+    @GetMapping( path = "/test", produces = "application/json")
+    public String getTest() {
+        return "Test";
+    }
+
+    @GetMapping( path = "/callOtherServices", produces = "application/json")
+    public String getConfig() {
+        String response = testFeignClient.testClientRest2().getBody();
+        String responseEureka = testFeignClientEurekaClient.testClientRest2().getBody();
+        String responseLoadBalancer = testLoadBalancer.testLoadBalancer().getBody();
+        return "Call from" + applicationName + " - tutti con Openfeign\n" +
+                " - Response from ServiceRest2 tramite URL diretto: " + response + "\n" +
+                " - Response from EurekaService tramite discovery Eureka: " + responseEureka + "\n" +
+                " - Response from LoadBalancerService(multiple instance) tramite discovery Eureka: " + responseLoadBalancer;
+    }
+}
