@@ -1,6 +1,8 @@
 package products.cassazione.csc.cscbackend.servicerest.rest;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,4 +71,17 @@ public class TestController {
     public String getCircuitBreakerFallback(Throwable t) {
         return "Circuit Breaker fallback method";
     }
+
+    @GetMapping( path = "/callRateLimiter", produces = "application/json")
+    @RateLimiter(name = "rl-microservice", fallbackMethod = "rateLimiterFallback")
+    // @Bulkhead(name = "bh-microservice")
+    public String rateLimiterEndpoint(Throwable t) {
+        return "Rate Limiter method";
+    }
+
+    public String rateLimiterFallback(Throwable t) {
+        return "Rate Limiter fallback method";
+    }
+
+
 }
