@@ -15,6 +15,6 @@ public class KafkaListenerMsTopic {
 
     @KafkaListener(topics="ms-topic", groupId = "group-ms-topic")
     public void listen(String message) {
-        logger.info("Received message: {}", message);
+        logger.info("Received message from kakfa: {}", message);
     }
 }

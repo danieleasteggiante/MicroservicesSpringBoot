@@ -3,10 +3,12 @@ package products.cassazione.csc.cscbackend.servicerest.rest;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +23,7 @@ import products.cassazione.csc.cscbackend.servicerest.producer.MsTopicProducer;
  */
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class TestController {
 
@@ -36,21 +39,7 @@ public class TestController {
     private final TestLoadBalancer testLoadBalancer;
     private final TestFeignCircuitBreaker testFeignCircuitBreaker;
     private final MsTopicProducer msTopicProducer;
-
-    public TestController(Logger logger,
-                          TestFeignClient testFeignClient,
-                          TestFeignClientEurekaClient testFeignClientEurekaClient,
-                          TestLoadBalancer testLoadBalancer,
-                          TestFeignCircuitBreaker testFeignCircuitBreaker,
-                          MsTopicProducer msTopicProducer)
-    {
-        this.logger = logger;
-        this.testFeignClient = testFeignClient;
-        this.testFeignClientEurekaClient = testFeignClientEurekaClient;
-        this.testLoadBalancer = testLoadBalancer;
-        this.testFeignCircuitBreaker = testFeignCircuitBreaker;
-        this.msTopicProducer = msTopicProducer;
-    }
+    private final KafkaTemplate<String, String> kafkaTemplateTransaction;
 
     @GetMapping( path = "/test", produces = "application/json")
     public String getTest() {
@@ -94,7 +83,15 @@ public class TestController {
     @GetMapping( path = "/callKafka", produces = "application/json")
     public ResponseEntity<String> callKafka() {
         logger.info("Sending message to Kafka");
-        msTopicProducer.sendMessage("Message to Kafka");
+        msTopicProducer.sendMessage("Message from " + applicationName);
+        return ResponseEntity.ok("Message sent to Kafka");
+    }
+
+    @GetMapping(path = "/distribuiteTransaction", produces = "application/json")
+    public ResponseEntity<String> distribuiteTransactionOK() {
+        logger.info("Begin transaction OK id: 1");
+        logger.info("Perform query to decrementing stock");
+        kafkaTemplateTransaction.send("ms-transaction", "begin transaction OK id: 1");
         return ResponseEntity.ok("Message sent to Kafka");
     }
 
