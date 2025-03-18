@@ -92,7 +92,6 @@ public class TestController {
         logger.info("Begin transaction OK id: 1");
         logger.info("Perform query to decrementing stock");
         kafkaTemplateTransaction.send("ms-transaction", "begin transaction OK id: 1");
-        return ResponseEntity.ok("Message sent to Kafka");
+        return ResponseEntity.ok("Distribuite transaction end");
     }
-
 }
