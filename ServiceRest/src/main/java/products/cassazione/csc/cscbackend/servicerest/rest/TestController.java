@@ -3,6 +3,7 @@ package products.cassazione.csc.cscbackend.servicerest.rest;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import jakarta.ws.rs.QueryParam;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import products.cassazione.csc.cscbackend.servicerest.feign.TestFeignChatAI;
 import products.cassazione.csc.cscbackend.servicerest.feign.TestFeignCircuitBreaker;
 import products.cassazione.csc.cscbackend.servicerest.feign.TestFeignClient;
 import products.cassazione.csc.cscbackend.servicerest.feign.TestFeignClientEurekaClient;
@@ -42,6 +44,7 @@ public class TestController {
     private final TestFeignCircuitBreaker testFeignCircuitBreaker;
     private final MsTopicProducer msTopicProducer;
     private final KafkaTemplate<String, String> kafkaTemplateTransaction;
+    private final TestFeignChatAI testFeignChatAI;
 
     @GetMapping( path = "/test", produces = "application/json")
     public String getTest() {
@@ -95,5 +98,13 @@ public class TestController {
         logger.info("Perform query to decrementing stock");
         kafkaTemplateTransaction.send("ms-transaction", "begin transaction OK id: 1");
         return ResponseEntity.ok("Distribuite transaction end");
+    }
+
+    @GetMapping(path = "/chatAI", produces = "application/json")
+    // la string dentro l'annotation deve essere uguale al nome della variabile
+    public ResponseEntity<String> chatAI(@QueryParam("q") String q) {
+        logger.info("Begin call chat AI");
+        String response = testFeignChatAI.testChatAI(q);
+        return ResponseEntity.ok(response);
     }
 }

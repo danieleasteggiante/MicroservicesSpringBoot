@@ -26,6 +26,7 @@ public class RouteConfig {
                         .filters(f -> f.rewritePath("/v/(?<segment>.*)", "/${segment}"))  // Riscrive il path
                         .uri("lb://SERVICEREST"))
                 .route(r -> r.path("/get").uri("http://httpbin.org:80"))
+                .route(r -> r.path("/chat/**").uri("lb://AICHAT"))
                 .build();
     }
 }

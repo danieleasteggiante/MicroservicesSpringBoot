@@ -16,7 +16,7 @@ import products.microservices.aichat.service.ChatAIService;
  */
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/chat")
 public class ChatController {
     private final static Logger logger = LoggerFactory.getLogger(ChatController.class);
     private ChatAIService chatAIService;
@@ -26,8 +26,8 @@ public class ChatController {
         this.chatAIService = chatAIService;
     }
 
-    @GetMapping(path = "/chat", produces = "application/json")
-    public String chat(@RequestParam("question") String question) {
+    @GetMapping(path = "/questions", produces = "application/json")
+    public String chat(@RequestParam("q") String question) {
         logger.info("Calling chat AI from question: " + question);
         ChatResponse chatResponse = chatAIService.generateResponse(question);
         logger.info(chatResponse.getResult().getOutput().toString());
