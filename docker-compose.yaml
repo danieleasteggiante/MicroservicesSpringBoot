@@ -79,6 +79,15 @@ services:
     depends_on:
       - elasticsearch
 
+  ollama:
+    container_name: ollama
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./config/ollama_startup.sh:/usr/local/bin/ollama_startup.sh
+    command: [ "sh", "/usr/local/bin/ollama_startup.sh" ]
+
 volumes:
   kafka_data:
   elasticsearch:

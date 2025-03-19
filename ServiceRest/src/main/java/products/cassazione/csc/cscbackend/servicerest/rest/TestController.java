@@ -18,6 +18,8 @@ import products.cassazione.csc.cscbackend.servicerest.feign.TestFeignClientEurek
 import products.cassazione.csc.cscbackend.servicerest.feign.TestLoadBalancer;
 import products.cassazione.csc.cscbackend.servicerest.producer.MsTopicProducer;
 
+import java.util.List;
+
 /**
  * @author Daniele Asteggiante
  */

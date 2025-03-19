@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="EurekaServer" />
         <module name="EurekaClient" />
+        <module name="AiChat" />
         <module name="ConfigServer" />
         <module name="LoadBalancerService" />
         <module name="CloudGateway" />
@@ -34,6 +35,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="AiChat" options="-parameters" />
       <module name="CloudGateway" options="-parameters" />
       <module name="ConfigClient" options="-parameters" />
       <module name="ConfigServer" options="-parameters" />
