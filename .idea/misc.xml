@@ -15,6 +15,7 @@
         <option value="$PROJECT_DIR$/LoadBalancerService/pom.xml" />
         <option value="$PROJECT_DIR$/CloudGateway/pom.xml" />
         <option value="$PROJECT_DIR$/AiChat/pom.xml" />
+        <option value="$PROJECT_DIR$/QuarkusApp/pom.xml" />
       </list>
     </option>
   </component>

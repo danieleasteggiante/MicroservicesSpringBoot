@@ -8,6 +8,8 @@
     <file url="file://$PROJECT_DIR$/EurekaClient/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/EurekaServer/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/LoadBalancerService/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/QuarkusApp/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/QuarkusApp/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ServiceRest2/src/main/java" charset="UTF-8" />
   </component>
 </project>
